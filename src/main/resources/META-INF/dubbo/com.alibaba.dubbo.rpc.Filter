@@ -1,0 +1,2 @@
+catConsumer=com.zebra.carcloud.dubboExt.filter.CatConsumerFilter
+catProvider=com.zebra.carcloud.dubboExt.filter.CatProviderFilter
