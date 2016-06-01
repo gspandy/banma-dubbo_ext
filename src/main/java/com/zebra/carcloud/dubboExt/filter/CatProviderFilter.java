@@ -37,7 +37,6 @@ public class CatProviderFilter implements Filter {
             Result result = null;
             try {
                 result = invoker.invoke(invocation);
-
                 t.setStatus(Transaction.SUCCESS);
             } catch (Exception e) {
                 logger.error(e);
