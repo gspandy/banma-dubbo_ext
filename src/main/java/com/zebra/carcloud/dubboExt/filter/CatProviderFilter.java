@@ -22,7 +22,7 @@ public class CatProviderFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         Map<String,String> attachments = invocation.getAttachments();
-        System.out.println("---------------------------->" + attachments.get("pId")+"|"+attachments.get("cId")+"|"+attachments.get("rId"));
+//        System.out.println("---------------------------->" + attachments.get("pId")+"|"+attachments.get("cId")+"|"+attachments.get("rId"));
         if(Cat.isInitialized()) {
             RemoteContext ctx = new RemoteContext();
             ctx.addProperty(Cat.Context.PARENT, attachments.get("pId"));
