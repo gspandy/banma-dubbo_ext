@@ -1,6 +1,7 @@
 package com.zebra.carcloud.mybatisExt.Interceptor;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.Transaction;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -31,7 +32,9 @@ public class SqlInterceptor implements Interceptor {
     private Properties properties;
 
     public Object intercept(Invocation invocation) throws Throwable {
-        System.out.println("------------->SqlInterceptor");
+//        System.out.println("------------->SqlInterceptor");
+        long s = System.currentTimeMillis();
+
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
         Object parameter = null;
         if (invocation.getArgs().length > 1) {
@@ -40,18 +43,19 @@ public class SqlInterceptor implements Interceptor {
         String sqlId = mappedStatement.getId();
         BoundSql boundSql = mappedStatement.getBoundSql(parameter);
         String commandType = mappedStatement.getSqlCommandType().name();
-        Configuration configuration = mappedStatement.getConfiguration();
+//        Configuration configuration = mappedStatement.getConfiguration();
         Object returnValue = null;
 
-        Transaction t = Cat.newTransaction("SQL",cutSqlId(sqlId));
+//        System.out.println("---------->"+(System.currentTimeMillis()-s));
+
+        Transaction t = Cat.newTransaction(CatConstants.TYPE_SQL,cutSqlId(sqlId));
 
         try{
             returnValue = invocation.proceed();
-            Cat.logEvent("SQL",commandType,"success",boundSql.getSql());
+            Cat.logEvent(CatConstants.TYPE_SQL,commandType,"success",boundSql.getSql());
             t.setStatus(Transaction.SUCCESS);
         }catch (RuntimeException e){
             t.setStatus(e);
-            Cat.logEvent("SQL",commandType,"error",getSql(configuration,boundSql,sqlId));
             throw e;
         }finally {
             t.complete();

@@ -4,6 +4,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.Transaction;
 import org.apache.log4j.Logger;
 
@@ -21,26 +22,36 @@ public class CatProviderFilter implements Filter {
     }
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        Map<String,String> attachments = invocation.getAttachments();
-//        System.out.println("---------------------------->" + attachments.get("pId")+"|"+attachments.get("cId")+"|"+attachments.get("rId"));
+        Map<String,String> attachments = RpcContext.getContext().getAttachments();
+
+        if(logger.isDebugEnabled()) {
+            logger.debug("===========>consumerFilter:" + attachments.get(Cat.Context.PARENT) + "|" + attachments.get(Cat.Context.CHILD) + "|" + attachments.get(Cat.Context.ROOT));
+        }
+
+
         if(Cat.isInitialized()) {
-            RemoteContext ctx = new RemoteContext();
-            ctx.addProperty(Cat.Context.PARENT, attachments.get("pId"));
-            ctx.addProperty(Cat.Context.CHILD, attachments.get("cId"));
-            ctx.addProperty(Cat.Context.ROOT, attachments.get("rId"));
+            CatContext ctx = new CatContext();
+            ctx.addProperty(Cat.Context.PARENT, attachments.get(Cat.Context.PARENT));
+            ctx.addProperty(Cat.Context.CHILD, attachments.get(Cat.Context.CHILD));
+            ctx.addProperty(Cat.Context.ROOT, attachments.get(Cat.Context.ROOT));
             Cat.logRemoteCallServer(ctx);
 
-            StringBuilder sb = new StringBuilder(invoker.getInterface().getSimpleName());
-            sb.append(":").append(invocation.getMethodName());
+            StringBuilder sb = new StringBuilder();
+            sb.append("dubbo:")
+                    .append(invoker.getInterface().getSimpleName())
+                    .append(".")
+                    .append(invocation.getMethodName());
 
-            Transaction t = Cat.newTransaction("RemoteService", sb.toString());
+            Transaction t = Cat.newTransaction(CatConstants.TYPE_SERVICE, sb.toString());
             Result result = null;
             try {
                 result = invoker.invoke(invocation);
                 t.setStatus(Transaction.SUCCESS);
-            } catch (Exception e) {
+            } catch (RpcException e) {
                 logger.error(e);
                 t.setStatus(e);
+                Cat.logError(e.getMessage(),e);
+                throw e;
             } finally {
                 t.complete();
             }

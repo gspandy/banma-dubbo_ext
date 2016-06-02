@@ -4,6 +4,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.Transaction;
 import org.apache.log4j.Logger;
 
@@ -21,27 +22,35 @@ public class CatConsumerFilter implements Filter {
     }
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
-        Map<String,String> attachments = invocation.getAttachments();
         if(Cat.isInitialized()){
+            Map<String,String> attachments = RpcContext.getContext().getAttachments();
 
-            StringBuilder sb = new StringBuilder(invoker.getInterface().getSimpleName());
-            sb.append(":").append(invocation.getMethodName());
-            Transaction t = Cat.getProducer().newTransaction("DubboCall", sb.toString());
+            if(logger.isDebugEnabled()) {
+                logger.debug("===========>consumerFilter");
+            }
 
-            RemoteContext ctx = new RemoteContext();
+            StringBuilder sb = new StringBuilder();
+            sb.append("dubbo:")
+                    .append(invoker.getInterface().getSimpleName())
+                    .append(".")
+                    .append(invocation.getMethodName());
+
+            Transaction t = Cat.getProducer().newTransaction(CatConstants.TYPE_CALL, sb.toString());
+
+            CatContext ctx = new CatContext();
             Cat.logRemoteCallClient(ctx);
-            attachments.put("rId", ctx.getProperty(Cat.Context.ROOT));
-            attachments.put("pId", ctx.getProperty(Cat.Context.PARENT));
-            attachments.put("cId", ctx.getProperty(Cat.Context.CHILD));
+            attachments.put(Cat.Context.ROOT, ctx.getProperty(Cat.Context.ROOT));
+            attachments.put(Cat.Context.PARENT, ctx.getProperty(Cat.Context.PARENT));
+            attachments.put(Cat.Context.CHILD, ctx.getProperty(Cat.Context.CHILD));
 
             Result result = null;
             try {
                 result = invoker.invoke(invocation);
                 t.setStatus(Transaction.SUCCESS);
-            } catch (RuntimeException e) {
-                Cat.logEvent("RemoteCall","callInfo", "",invocation.toString());
+            } catch (RpcException e) {
                 logger.error(e);
                 t.setStatus(e);
+                Cat.logError(e.getMessage(),e);
                 throw e;
             } finally {
                 t.complete();
