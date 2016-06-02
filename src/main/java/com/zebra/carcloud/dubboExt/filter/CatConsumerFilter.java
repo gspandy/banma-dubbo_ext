@@ -3,6 +3,7 @@ package com.zebra.carcloud.dubboExt.filter;
 import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.rpc.*;
+import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.Transaction;
@@ -26,7 +27,7 @@ public class CatConsumerFilter implements Filter {
             Map<String,String> attachments = RpcContext.getContext().getAttachments();
 
             if(logger.isDebugEnabled()) {
-                logger.debug("===========>consumerFilter");
+                logger.debug("===========>consumerFilter:rpcContext:"+ JSONObject.toJSONString(RpcContext.getContext()));
             }
 
             StringBuilder sb = new StringBuilder();
