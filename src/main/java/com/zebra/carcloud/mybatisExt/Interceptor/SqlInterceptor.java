@@ -33,7 +33,7 @@ public class SqlInterceptor implements Interceptor {
 
     public Object intercept(Invocation invocation) throws Throwable {
 //        System.out.println("------------->SqlInterceptor");
-        long s = System.currentTimeMillis();
+//        long s = System.currentTimeMillis();
 
         MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
         Object parameter = null;
@@ -43,7 +43,7 @@ public class SqlInterceptor implements Interceptor {
         String sqlId = mappedStatement.getId();
         BoundSql boundSql = mappedStatement.getBoundSql(parameter);
         String commandType = mappedStatement.getSqlCommandType().name();
-//        Configuration configuration = mappedStatement.getConfiguration();
+        Configuration configuration = mappedStatement.getConfiguration();
         Object returnValue = null;
 
 //        System.out.println("---------->"+(System.currentTimeMillis()-s));
@@ -55,6 +55,7 @@ public class SqlInterceptor implements Interceptor {
             Cat.logEvent(CatConstants.TYPE_SQL,commandType,"success",boundSql.getSql());
             t.setStatus(Transaction.SUCCESS);
         }catch (RuntimeException e){
+            Cat.logEvent(CatConstants.TYPE_SQL,commandType,"error",getSql(configuration,boundSql,sqlId));
             t.setStatus(e);
             throw e;
         }finally {
