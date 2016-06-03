@@ -1,4 +1,4 @@
-package com.zebra.carcloud.dubboExt.filter;
+package com.zebra.carcloud.dubboExt.filter.cat;
 
 import com.dianping.cat.Cat;
 
