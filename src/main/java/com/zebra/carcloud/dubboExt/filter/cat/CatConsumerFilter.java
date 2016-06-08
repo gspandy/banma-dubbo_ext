@@ -55,12 +55,12 @@ public class CatConsumerFilter implements Filter {
             clientCallAppEvent.complete();
             t.addChild(clientCallAppEvent);
 
-            Event clientCallServerEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER,getProviderName(invoker));
+            Event clientCallServerEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER,invoker.getUrl().getHost());
             clientCallServerEvent.setStatus(Message.SUCCESS);
             clientCallServerEvent.complete();
             t.addChild(clientCallServerEvent);
 
-            Event clientCallPort = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,getProviderName(invoker));
+            Event clientCallPort = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
             clientCallPort.setStatus(Message.SUCCESS);
             clientCallPort.complete();
             t.addChild(clientCallPort);
