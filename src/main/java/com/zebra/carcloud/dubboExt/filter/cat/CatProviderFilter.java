@@ -6,7 +6,9 @@ import com.alibaba.dubbo.rpc.*;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.zebra.carcloud.cat.CatConstantsExt;
 import org.apache.log4j.Logger;
 
@@ -45,12 +47,23 @@ public class CatProviderFilter implements Filter {
 
             Transaction t = Cat.newTransaction(CatConstants.TYPE_SERVICE, sb.toString());
 
+            //cross
             String consumerAppName = RpcContext.getContext().getAttachment(CatConstantsExt.CLIENT_APP_NAME_KEY);
             if(consumerAppName == null || consumerAppName.length() == 0){
                 consumerAppName= RpcContext.getContext().getRemoteHost()+":"+ RpcContext.getContext().getRemotePort();
             }
-            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
-            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
+//            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
+//            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
+            Message serverCallAppEvent = new DefaultEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
+            serverCallAppEvent.setStatus(Message.SUCCESS);
+            serverCallAppEvent.complete();
+            t.addChild(serverCallAppEvent);
+
+            Message serverCallClient = new DefaultEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
+            serverCallClient.setStatus(Message.SUCCESS);
+            serverCallClient.complete();
+            t.addChild(serverCallClient);
+            //cross
 
             CatContext ctx = new CatContext();
             ctx.addProperty(Cat.Context.PARENT, attachments.get(Cat.Context.PARENT));

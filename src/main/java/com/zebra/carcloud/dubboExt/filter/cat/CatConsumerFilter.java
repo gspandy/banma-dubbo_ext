@@ -6,7 +6,10 @@ import com.alibaba.dubbo.rpc.*;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.zebra.carcloud.cat.CatConstantsExt;
 import org.apache.log4j.Logger;
 
@@ -42,9 +45,27 @@ public class CatConsumerFilter implements Filter {
 
             Transaction t = Cat.getProducer().newTransaction(CatConstants.TYPE_CALL, sb.toString());
 
-            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
-            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER, invoker.getUrl().getHost());
-            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
+
+            //cross调用
+//            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
+//            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER, invoker.getUrl().getHost());
+//            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
+            Event clientCallAppEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
+            clientCallAppEvent.setStatus(Message.SUCCESS);
+            clientCallAppEvent.complete();
+            t.addChild(clientCallAppEvent);
+
+            Event clientCallServerEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER,getProviderName(invoker));
+            clientCallServerEvent.setStatus(Message.SUCCESS);
+            clientCallServerEvent.complete();
+            t.addChild(clientCallServerEvent);
+
+            Event clientCallPort = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,getProviderName(invoker));
+            clientCallPort.setStatus(Message.SUCCESS);
+            clientCallPort.complete();
+            t.addChild(clientCallPort);
+            //cross
+
 
             CatContext ctx = new CatContext();
             Cat.logRemoteCallClient(ctx);
