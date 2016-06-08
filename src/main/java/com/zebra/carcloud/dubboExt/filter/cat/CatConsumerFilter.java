@@ -72,7 +72,10 @@ public class CatConsumerFilter implements Filter {
             attachments.put(Cat.Context.ROOT, ctx.getProperty(Cat.Context.ROOT));
             attachments.put(Cat.Context.PARENT, ctx.getProperty(Cat.Context.PARENT));
             attachments.put(Cat.Context.CHILD, ctx.getProperty(Cat.Context.CHILD));
-            attachments.put(CatConstantsExt.CLIENT_APP_NAME_KEY,invoker.getUrl().getParameter(Constants.APPLICATION_KEY));
+
+            //通知服务端客户端名字
+//            attachments.put(CatConstantsExt.CLIENT_APP_NAME_KEY,invoker.getUrl().getParameter(Constants.APPLICATION_KEY));
+            attachments.put(CatConstantsExt.CLIENT_APP_NAME_KEY,Cat.getManager().getDomain());
 
             Result result = null;
             try {

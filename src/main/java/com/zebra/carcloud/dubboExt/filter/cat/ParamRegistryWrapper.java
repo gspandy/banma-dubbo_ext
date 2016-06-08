@@ -4,6 +4,7 @@ import com.alibaba.dubbo.common.Constants;
 import com.alibaba.dubbo.common.URL;
 import com.alibaba.dubbo.registry.NotifyListener;
 import com.alibaba.dubbo.registry.Registry;
+import com.dianping.cat.Cat;
 import com.zebra.carcloud.cat.CatConstantsExt;
 
 import java.util.List;
@@ -26,7 +27,9 @@ public class ParamRegistryWrapper implements Registry{
     private URL appendParam(URL url){
         String side = url.getParameter(Constants.SIDE_KEY);
         if(Constants.PROVIDER_SIDE.equals(side)){
-            return url.addParameter(CatConstantsExt.SERVER_APP_NAME_KEY,url.getParameter(Constants.APPLICATION_KEY));
+//            return url.addParameter(CatConstantsExt.SERVER_APP_NAME_KEY,url.getParameter(Constants.APPLICATION_KEY));
+            //修改为获取cat定义的appname
+            return url.addParameter(CatConstantsExt.SERVER_APP_NAME_KEY,Cat.getManager().getDomain());
         }
 
         return url;
