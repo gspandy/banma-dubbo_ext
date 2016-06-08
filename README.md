@@ -14,5 +14,5 @@
 * 目前支持只支持log4j，增加一个appender。`<appender name="catAppender" class="com.dianping.cat.log4j.CatAppender"></appender>`
 
 # 如何查看是否已经配置成功并上线
-1. 打开cat服务器状态页面 http://139.196.14.168:2281/cat/r/state
+1. 打开cat服务器状态页面 http://139.196.14.168:2281/cat/r/state 账号：zebraCar 密码：mko0,lp-.;[=
 2. 能够在项目列表中看到自己的项目说明已经配置成功
