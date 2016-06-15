@@ -14,6 +14,7 @@ import com.zebra.carcloud.cat.CatConstantsExt;
 import org.apache.log4j.Logger;
 
 import java.util.Map;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by ying on 16/5/30.
@@ -80,11 +81,34 @@ public class CatConsumerFilter implements Filter {
             Result result = null;
             try {
                 result = invoker.invoke(invocation);
-                t.setStatus(Transaction.SUCCESS);
+
+                if(result.hasException()){
+                    Throwable throwable = result.getException();
+                    if(RpcException.class == throwable.getClass()){//RpcException因为封装了其他异常 所以拆开处理
+                        Throwable causeby = throwable.getCause();
+                        if(causeby != null){
+                            t.setStatus(causeby);
+                            Cat.logError(causeby.getMessage(),causeby);
+                        }
+                    }else{
+                        t.setStatus(throwable);
+                        Cat.logError(throwable.getMessage(),throwable);
+                    }
+                }else {
+                    t.setStatus(Transaction.SUCCESS);
+                }
+
             } catch (RuntimeException e) {
-                logger.error(e);
-                t.setStatus(e);
-                Cat.logError(e.getMessage(),e);
+                if(RpcException.class == e.getClass()){
+                    Throwable causeby = e.getCause();
+                    if(causeby != null){
+                        t.setStatus(causeby);
+                        Cat.logError(causeby.getMessage(), causeby);
+                    }
+                }else{
+                    t.setStatus(e);
+                    Cat.logError(e.getMessage(), e);
+                }
                 throw e;
             } finally {
                 t.complete();
