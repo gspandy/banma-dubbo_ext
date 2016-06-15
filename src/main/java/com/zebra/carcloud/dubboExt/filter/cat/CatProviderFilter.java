@@ -82,6 +82,9 @@ public class CatProviderFilter implements Filter {
                         if(causeby != null){
                             t.setStatus(causeby);
                             Cat.logError(causeby.getMessage(),causeby);
+                        }else{
+                            t.setStatus(throwable);
+                            Cat.logError(throwable.getMessage(),throwable);
                         }
                     }else{
                         t.setStatus(throwable);
@@ -96,6 +99,9 @@ public class CatProviderFilter implements Filter {
                     if(causeby != null){
                         t.setStatus(causeby);
                         Cat.logError(causeby.getMessage(), causeby);
+                    }else{
+                        t.setStatus(e);
+                        Cat.logError(e.getMessage(),e);
                     }
                 }else{
                     t.setStatus(e);
