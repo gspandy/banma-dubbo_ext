@@ -136,7 +136,8 @@ public class CatConsumerFilter implements Filter {
         providerName = invoker.getUrl().getParameter(CatConstantsExt.SERVER_APP_NAME_KEY);
 
         if(providerName == null || providerName.length() == 0){//如果获取不到服务名字，直接截取接口名最后一个.前面部分
-            String interfaceName = invoker.getInterface().getName();
+//            String interfaceName = invoker.getInterface().getName();
+            String interfaceName = invoker.getUrl().getServiceInterface();//使用serviceInterface,防止泛化调用的时候显示不正确
             providerName = interfaceName.substring(0,interfaceName.lastIndexOf("."));
         }
 
