@@ -32,11 +32,11 @@ public class CatConsumerFilter implements Filter {
             RpcContext rpcContext = RpcContext.getContext();
             Map<String,String> attachments = rpcContext.getAttachments();
 
-            if(logger.isDebugEnabled()) {
-                logger.debug("===========>consumerFilter:invoker:"+JSONObject.toJSONString(invoker));
-                logger.debug("===========>consumerFilter:invocation:"+JSONObject.toJSONString(invocation));
-                logger.debug("===========>consumerFilter:rpcContext:"+ JSONObject.toJSONString(RpcContext.getContext()));
-            }
+//            if(logger.isDebugEnabled()) {
+//                logger.debug("===========>consumerFilter:invoker:"+JSONObject.toJSONString(invoker));
+//                logger.debug("===========>consumerFilter:invocation:"+JSONObject.toJSONString(invocation));
+//                logger.debug("===========>consumerFilter:rpcContext:"+ JSONObject.toJSONString(RpcContext.getContext()));
+//            }
 
             StringBuilder sb = new StringBuilder();
             sb.append("dubbo:")

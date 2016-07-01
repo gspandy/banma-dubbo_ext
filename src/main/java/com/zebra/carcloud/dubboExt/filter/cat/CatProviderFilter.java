@@ -29,12 +29,12 @@ public class CatProviderFilter implements Filter {
         RpcContext rpcContext = RpcContext.getContext();
         Map<String,String> attachments = rpcContext.getAttachments();
 
-        if(logger.isDebugEnabled()) {
-            logger.debug("===========>providerFilter:" + attachments.get(Cat.Context.PARENT) + "|" + attachments.get(Cat.Context.CHILD) + "|" + attachments.get(Cat.Context.ROOT));
-            logger.debug("===========>providerFilter:invoker:"+ JSONObject.toJSONString(invoker));
-            logger.debug("===========>providerFilter:invocation:"+JSONObject.toJSONString(invocation));
-            logger.debug("===========>providerFilter:rpcContext:"+ JSONObject.toJSONString(RpcContext.getContext()));
-        }
+//        if(logger.isDebugEnabled()) {
+//            logger.debug("===========>providerFilter:" + attachments.get(Cat.Context.PARENT) + "|" + attachments.get(Cat.Context.CHILD) + "|" + attachments.get(Cat.Context.ROOT));
+//            logger.debug("===========>providerFilter:invoker:"+ JSONObject.toJSONString(invoker));
+//            logger.debug("===========>providerFilter:invocation:"+JSONObject.toJSONString(invocation));
+//            logger.debug("===========>providerFilter:rpcContext:"+ JSONObject.toJSONString(RpcContext.getContext()));
+//        }
 
 
         if(Cat.isInitialized()) {

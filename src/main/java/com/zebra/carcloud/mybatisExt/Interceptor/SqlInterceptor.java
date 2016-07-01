@@ -2,6 +2,7 @@ package com.zebra.carcloud.mybatisExt.Interceptor;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
@@ -52,7 +53,7 @@ public class SqlInterceptor implements Interceptor {
 
         try{
             returnValue = invocation.proceed();
-            Cat.logEvent(CatConstants.TYPE_SQL,commandType,"success",boundSql.getSql());
+            Cat.logEvent(CatConstants.TYPE_SQL,commandType, Message.SUCCESS,boundSql.getSql());
             t.setStatus(Transaction.SUCCESS);
         }catch (RuntimeException e){
             Cat.logEvent(CatConstants.TYPE_SQL,commandType,"error",getSql(configuration,boundSql,sqlId));
