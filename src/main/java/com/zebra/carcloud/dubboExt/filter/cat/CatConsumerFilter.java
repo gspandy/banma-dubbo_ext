@@ -48,23 +48,23 @@ public class CatConsumerFilter implements Filter {
 
 
             //cross调用
-//            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
-//            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER, invoker.getUrl().getHost());
-//            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
-            Event clientCallAppEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
-            clientCallAppEvent.setStatus(Message.SUCCESS);
-            clientCallAppEvent.complete();
-            t.addChild(clientCallAppEvent);
-
-            Event clientCallServerEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER,invoker.getUrl().getHost());
-            clientCallServerEvent.setStatus(Message.SUCCESS);
-            clientCallServerEvent.complete();
-            t.addChild(clientCallServerEvent);
-
-            Event clientCallPort = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
-            clientCallPort.setStatus(Message.SUCCESS);
-            clientCallPort.complete();
-            t.addChild(clientCallPort);
+            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
+            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER, invoker.getUrl().getHost());
+            Cat.logEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
+//            Event clientCallAppEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_APP,getProviderName(invoker));
+//            clientCallAppEvent.setStatus(Message.SUCCESS);
+//            clientCallAppEvent.complete();
+//            t.addChild(clientCallAppEvent);
+//
+//            Event clientCallServerEvent = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_SERVER,invoker.getUrl().getHost());
+//            clientCallServerEvent.setStatus(Message.SUCCESS);
+//            clientCallServerEvent.complete();
+//            t.addChild(clientCallServerEvent);
+//
+//            Event clientCallPort = new DefaultEvent(CatConstantsExt.TYPE_CLIENT_CALL_PORT,String.valueOf(invoker.getUrl().getPort()));
+//            clientCallPort.setStatus(Message.SUCCESS);
+//            clientCallPort.complete();
+//            t.addChild(clientCallPort);
             //cross
 
 

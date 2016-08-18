@@ -52,17 +52,17 @@ public class CatProviderFilter implements Filter {
             if(consumerAppName == null || consumerAppName.length() == 0){
                 consumerAppName= RpcContext.getContext().getRemoteHost()+":"+ RpcContext.getContext().getRemotePort();
             }
-//            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
-//            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
-            Message serverCallAppEvent = new DefaultEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
-            serverCallAppEvent.setStatus(Message.SUCCESS);
-            serverCallAppEvent.complete();
-            t.addChild(serverCallAppEvent);
-
-            Message serverCallClient = new DefaultEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
-            serverCallClient.setStatus(Message.SUCCESS);
-            serverCallClient.complete();
-            t.addChild(serverCallClient);
+            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
+            Cat.logEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
+//            Message serverCallAppEvent = new DefaultEvent(CatConstantsExt.TYPE_SERVER_CALL_APP,consumerAppName);
+//            serverCallAppEvent.setStatus(Message.SUCCESS);
+//            serverCallAppEvent.complete();
+//            t.addChild(serverCallAppEvent);
+//
+//            Message serverCallClient = new DefaultEvent(CatConstantsExt.TYPE_SERVER_CALL_CLIENT, invoker.getUrl().getHost());
+//            serverCallClient.setStatus(Message.SUCCESS);
+//            serverCallClient.complete();
+//            t.addChild(serverCallClient);
             //cross
 
             CatContext ctx = new CatContext();
