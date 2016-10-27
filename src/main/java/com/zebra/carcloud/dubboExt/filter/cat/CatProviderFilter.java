@@ -77,15 +77,19 @@ public class CatProviderFilter implements Filter {
 
                 if(result.hasException()){
                     Throwable throwable = result.getException();
-                    if(RpcException.class == throwable.getClass()){//RpcException因为封装了其他异常 所以拆开处理
+                    if(RpcException.class == throwable.getClass()) {//RpcException因为封装了其他异常 所以拆开处理
                         Throwable causeby = throwable.getCause();
-                        if(causeby != null){
+                        if (causeby != null) {
                             t.setStatus(causeby);
-                            Cat.logError(causeby.getMessage(),causeby);
-                        }else{
+                            Cat.logError(causeby.getMessage(), causeby);
+                        } else {
                             t.setStatus(throwable);
-                            Cat.logError(throwable.getMessage(),throwable);
+                            Cat.logError(throwable.getMessage(), throwable);
                         }
+                    }else if(BaseDubboException.class == throwable.getClass()){
+                        BaseDubboException exp = (BaseDubboException)throwable;
+                        Cat.logEvent(CatConstantsExt.TYPE_BUSSINESS_ERRO,exp.getCode()+"");
+                        t.setStatus(Transaction.SUCCESS);
                     }else{
                         t.setStatus(throwable);
                         Cat.logError(throwable.getMessage(),throwable);

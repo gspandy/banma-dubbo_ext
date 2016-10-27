@@ -93,6 +93,10 @@ public class CatConsumerFilter implements Filter {
                             t.setStatus(throwable);
                             Cat.logError(throwable.getMessage(),throwable);
                         }
+                    }else if(BaseDubboException.class == throwable.getClass()){
+                        BaseDubboException exp = (BaseDubboException)throwable;
+                        Cat.logEvent(CatConstantsExt.TYPE_BUSSINESS_ERRO,exp.getCode()+"");
+                        t.setStatus(Transaction.SUCCESS);
                     }else{
                         t.setStatus(throwable);
                         Cat.logError(throwable.getMessage(),throwable);

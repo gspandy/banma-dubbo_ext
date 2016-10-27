@@ -21,4 +21,6 @@ public class CatConstantsExt {
     //CROSS服务端埋点相关名字
     public static final String TYPE_SERVER_CALL_APP = "PigeonService.app";//服务的名字
     public static final String TYPE_SERVER_CALL_CLIENT = "PigeonService.client";//服务的地址
+
+    public static final String TYPE_BUSSINESS_ERRO = "bussinessError";//业务异常
 }
