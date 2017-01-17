@@ -80,8 +80,14 @@ public class CatProviderFilter implements Filter {
                     if(RpcException.class == throwable.getClass()) {//RpcException因为封装了其他异常 所以拆开处理
                         Throwable causeby = throwable.getCause();
                         if (causeby != null) {
-                            t.setStatus(causeby);
-                            Cat.logError(causeby.getMessage(), causeby);
+                            if(causeby.getClass() == BaseDubboException.class){
+                                BaseDubboException exp = (BaseDubboException)causeby;
+                                Cat.logEvent(CatConstantsExt.TYPE_BUSSINESS_ERRO,exp.getCode()+"");
+                                t.setStatus(Transaction.SUCCESS);
+                            }else {
+                                t.setStatus(causeby);
+                                Cat.logError(causeby.getMessage(), causeby);
+                            }
                         } else {
                             t.setStatus(throwable);
                             Cat.logError(throwable.getMessage(), throwable);
